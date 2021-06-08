@@ -12,6 +12,10 @@ class Classrooms with ChangeNotifier {
   final String _baseUrl = '${Constants.BASE_API_URL}/salas';
   List<Classroom> _items = [];
 
+  Classrooms() {
+    loadClassrooms();
+  }
+
   List<Classroom> get items => [..._items];
 
   int get countItems => _items.length;

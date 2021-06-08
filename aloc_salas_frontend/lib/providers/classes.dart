@@ -12,6 +12,10 @@ class Classes with ChangeNotifier {
   final String _baseUrl = '${Constants.BASE_API_URL}/turmas';
   List<Class> _items = [];
 
+  Classes() {
+    loadClasses();
+  }
+
   List<Class> get items => [..._items];
 
   int get countItems => _items.length;
@@ -82,7 +86,7 @@ class Classes with ChangeNotifier {
         'qualidade': newClass.qualidade
       }),
     );
-    print(response.body);
+    // print(response.body);
     _items.add(Class(
         id: response.body,
         disciplina: newClass.disciplina,
