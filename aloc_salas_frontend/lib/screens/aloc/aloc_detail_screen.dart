@@ -17,17 +17,33 @@ class _AlocDetailScreenState extends State<AlocDetailScreen> {
   Alocs alocs;
   Classes classes;
   Alocacao aloc;
-  List<ItemAlocacao> alocacao;
   Classrooms classrooms;
+  List<ItemAlocacao> alocacao;
+  List<ItemAlocacao> alocacoesFiltradas;
+  // String filtro;
 
   @override
   void didChangeDependencies() async {
     aloc = ModalRoute.of(context).settings.arguments as Alocacao;
     alocacao = aloc.alocacao;
+    alocacoesFiltradas = aloc.alocacao;
     classes = Provider.of<Classes>(context);
     alocs = Provider.of<Alocs>(context);
     classrooms = Provider.of<Classrooms>(context);
     super.didChangeDependencies();
+  }
+
+  updateFiltroAloc(String filtro) {
+    setState(() {
+      filtro = filtro.toLowerCase();
+      alocacoesFiltradas = alocacao
+          .where((item) => classes
+              .getById(item.idTurma)
+              .disciplina
+              .toLowerCase()
+              .contains(filtro))
+          .toList();
+    });
   }
 
   double taxaTurma(Class turma, ItemAlocacao itemAlocacao) {
@@ -36,7 +52,6 @@ class _AlocDetailScreenState extends State<AlocDetailScreen> {
       int tamnhoSala = classrooms.getById(horarioSala.sala).numero_cadeiras;
       taxa += (tamnhoSala - turma.numero_alunos) / tamnhoSala;
     });
-
     return taxa;
   }
 
@@ -47,27 +62,54 @@ class _AlocDetailScreenState extends State<AlocDetailScreen> {
         centerTitle: true,
         title: Text('Detalhe Alocação'),
       ),
-      body: ListView.builder(
-        itemCount: aloc.alocacao.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
-            child: ListTile(
-              title: Text(
-                  'Turma: ${classes.getById(alocacao[index].idTurma).disciplina}'),
-              subtitle: Text(
-                  'Alunos matriculados: ${classes.getById(alocacao[index].idTurma).numero_alunos}'),
-              trailing: Text(
-                  'Taxa: ${taxaTurma(classes.getById(alocacao[index].idTurma), alocacao[index]).toStringAsFixed(4)}'),
-              onTap: () {
-                Navigator.of(context).pushNamed(
-                  AppRoutes.HORARIOS_SCREEN,
-                  arguments: AlocItemAloc(aloc, alocacao[index]),
-                );
-              },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 50,
+                  width: 300,
+                  child: TextFormField(
+                    enableSuggestions: true,
+                    onChanged: (value) {
+                      updateFiltroAloc(value);
+                    },
+                  ),
+                ),
+                Icon(Icons.search),
+              ],
             ),
-          );
-        },
+            const SizedBox(height: 20),
+            Container(
+              height: 500,
+              child: ListView.builder(
+                itemCount: alocacoesFiltradas.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                    child: ListTile(
+                      title: Text(
+                          'Turma: ${classes.getById(alocacoesFiltradas[index].idTurma).disciplina}'),
+                      subtitle: Text(
+                          'Alunos matriculados: ${classes.getById(alocacoesFiltradas[index].idTurma).numero_alunos}'),
+                      trailing: Text(
+                          'Taxa: ${taxaTurma(classes.getById(alocacoesFiltradas[index].idTurma), alocacoesFiltradas[index]).toStringAsFixed(4)}'),
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          AppRoutes.HORARIOS_SCREEN,
+                          arguments:
+                              AlocItemAloc(aloc, alocacoesFiltradas[index]),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

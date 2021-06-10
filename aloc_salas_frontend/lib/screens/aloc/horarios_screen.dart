@@ -89,7 +89,7 @@ class _HorariosScreenState extends State<HorariosScreen> {
                 style: TextStyle(fontSize: 16)),
             const Divider(),
             const SizedBox(height: 10),
-            Text('Taxa:   ${taxaTurma(turma, itemAloc)}',
+            Text('Taxa:   ${taxaTurma(turma, itemAloc).toStringAsFixed(4)}',
                 style: TextStyle(fontSize: 18)),
             const SizedBox(height: 10),
             !loading
