@@ -1,7 +1,9 @@
 import 'package:aloc_salas_frontend/models/alocacao.dart';
 import 'package:aloc_salas_frontend/models/aloc_item_aloc.dart';
+import 'package:aloc_salas_frontend/models/class.dart';
 import 'package:aloc_salas_frontend/providers/alocs.dart';
 import 'package:aloc_salas_frontend/providers/classes.dart';
+import 'package:aloc_salas_frontend/providers/classrooms.dart';
 import 'package:aloc_salas_frontend/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,18 +15,29 @@ class AlocDetailScreen extends StatefulWidget {
 
 class _AlocDetailScreenState extends State<AlocDetailScreen> {
   Alocs alocs;
-  Alocacao aloc;
-  List<ItemAlocacao> listAloc;
   Classes classes;
+  Alocacao aloc;
+  List<ItemAlocacao> alocacao;
+  Classrooms classrooms;
 
   @override
   void didChangeDependencies() async {
     aloc = ModalRoute.of(context).settings.arguments as Alocacao;
-    listAloc = aloc.alocacao;
+    alocacao = aloc.alocacao;
     classes = Provider.of<Classes>(context);
     alocs = Provider.of<Alocs>(context);
-    // await alocs.loadSalasDisponiveis(classes.items, aloc);
+    classrooms = Provider.of<Classrooms>(context);
     super.didChangeDependencies();
+  }
+
+  double taxaTurma(Class turma, ItemAlocacao itemAlocacao) {
+    double taxa = 0;
+    itemAlocacao.horarios.forEach((horarioSala) {
+      int tamnhoSala = classrooms.getById(horarioSala.sala).numero_cadeiras;
+      taxa += (tamnhoSala - turma.numero_alunos) / tamnhoSala;
+    });
+
+    return taxa;
   }
 
   @override
@@ -41,14 +54,15 @@ class _AlocDetailScreenState extends State<AlocDetailScreen> {
             margin: EdgeInsets.symmetric(horizontal: 20, vertical: 3),
             child: ListTile(
               title: Text(
-                  'Turma: ${classes.items.singleWhere((el) => el.id == listAloc[index].idTurma).disciplina}'),
+                  'Turma: ${classes.getById(alocacao[index].idTurma).disciplina}'),
               subtitle: Text(
-                  'Alunos matriculados: ${classes.items.singleWhere((el) => el.id == listAloc[index].idTurma).numero_alunos}'),
-              trailing: Icon(Icons.search),
+                  'Alunos matriculados: ${classes.getById(alocacao[index].idTurma).numero_alunos}'),
+              trailing: Text(
+                  'Taxa: ${taxaTurma(classes.getById(alocacao[index].idTurma), alocacao[index]).toStringAsFixed(4)}'),
               onTap: () {
                 Navigator.of(context).pushNamed(
                   AppRoutes.HORARIOS_SCREEN,
-                  arguments: AlocItemAloc(aloc, listAloc[index]),
+                  arguments: AlocItemAloc(aloc, alocacao[index]),
                 );
               },
             ),

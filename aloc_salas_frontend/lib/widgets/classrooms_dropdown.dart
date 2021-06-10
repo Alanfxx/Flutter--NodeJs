@@ -14,15 +14,12 @@ class ClassroomsDropDown extends StatefulWidget {
 
 class ClassroomsDropDownState extends State<ClassroomsDropDown> {
   //
-  List<Room> _rooms;
   List<DropdownMenuItem<Room>> _dropdownMenuItems;
   Room _selectedRoom;
 
   @override
   void initState() {
-    _rooms = widget.receivedRooms;
-    _dropdownMenuItems = buildDropdownMenuItems(_rooms);
-    // _selectedRoom = _dropdownMenuItems[0].value;
+    _dropdownMenuItems = buildDropdownMenuItems(widget.receivedRooms);
     super.initState();
   }
 
@@ -48,6 +45,7 @@ class ClassroomsDropDownState extends State<ClassroomsDropDown> {
 
   @override
   Widget build(BuildContext context) {
+    // print('build ClassroomsDropDown');
     return Container(
       height: 30,
       padding: EdgeInsets.symmetric(horizontal: 15),

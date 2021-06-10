@@ -60,6 +60,11 @@ class _ClassroomScreenState extends State<ClassroomScreen> {
                                   'ID: ${classrooms.items[index].id_sala.toString()}'),
                               subtitle: Text(
                                   'Cadeiras: ${classrooms.items[index].numero_cadeiras.toString()}'),
+                              trailing: IconButton(
+                                onPressed: () => classrooms.deleteClassroom(
+                                    classrooms.items[index].id),
+                                icon: Icon(Icons.delete_forever),
+                              ),
                             ),
                           ),
                         );

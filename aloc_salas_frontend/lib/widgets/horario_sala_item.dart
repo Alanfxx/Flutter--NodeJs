@@ -24,6 +24,9 @@ class HorarioSalaItem extends StatefulWidget {
 
 class _HorarioSalaItemState extends State<HorarioSalaItem> {
   Room _room;
+  List<Room> _listClassrooms;
+  Classrooms classrooms;
+  Classroom sala;
 
   onchanged(room) {
     setState(() {
@@ -31,26 +34,39 @@ class _HorarioSalaItemState extends State<HorarioSalaItem> {
     });
   }
 
-  List<Room> criarLista(classrooms) {
+  List<Room> criarLista() {
     List<Room> list = [];
     widget.salasDisp.forEach((e) {
       if (e.horario == widget.horarioSala.horario)
         list.add(Room(
-            name: classrooms.items
-                .singleWhere((el) => el.id == e.sala)
-                .id_sala
-                .toString(),
+            name:
+                '${classrooms.getById(e.sala).id_sala} - ${classrooms.getById(e.sala).numero_cadeiras}',
             salaId: e.sala));
     });
     return list;
   }
 
   @override
+  void didChangeDependencies() {
+    setState(() {
+      classrooms = Provider.of<Classrooms>(context);
+      sala = classrooms.getById(widget.horarioSala.sala);
+      _listClassrooms = criarLista();
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(covariant HorarioSalaItem oldWidget) {
+    setState(() {
+      _listClassrooms = criarLista();
+    });
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final Classrooms classrooms =
-        Provider.of<Classrooms>(context, listen: false);
-    final Classroom sala =
-        classrooms.items.singleWhere((el) => el.id == widget.horarioSala.sala);
+    // print('build HorarioSalaItem');
 
     return Container(
       child: Card(
@@ -61,16 +77,18 @@ class _HorarioSalaItemState extends State<HorarioSalaItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('${widget.horarioSala.horario}'),
-              Text('${sala.id_sala}'),
+              Text('${sala.id_sala} - ${sala.numero_cadeiras}'),
               if (widget.salasDisp != null)
                 Row(
                   children: [
-                    ClassroomsDropDown(onchanged, criarLista(classrooms)),
-                    IconButton(
-                        onPressed: () {
-                          widget.aplicarMudancas(widget.horarioSala, _room);
-                        },
-                        icon: Icon(Icons.cached))
+                    ClassroomsDropDown(onchanged, _listClassrooms),
+                    if (_room != null)
+                      IconButton(
+                          onPressed: () {
+                            widget.aplicarMudancas(
+                                widget.horarioSala.horario, _room.salaId);
+                          },
+                          icon: Icon(Icons.cached))
                   ],
                 ),
             ],

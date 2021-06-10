@@ -40,7 +40,13 @@ class _AlocScreenState extends State<AlocScreen> {
               onPressed: () {
                 setState(() {
                   loading = true;
-                  alocs.run().then((value) => loading = false);
+                  alocs
+                      .run()
+                      .then((value) => loading = false)
+                      .catchError((err) {
+                    print(err);
+                    loading = false;
+                  });
                 });
               },
               child: Row(
@@ -68,9 +74,9 @@ class _AlocScreenState extends State<AlocScreen> {
                   margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   child: ListTile(
                     leading: Icon(Icons.account_tree_outlined),
-                    title: Text('ID: ${alocs.items[index].id}'),
-                    subtitle: Text(
-                        'Taxa Desocupação: ${alocs.items[index].taxaDesocupacao.toStringAsFixed(10)}'),
+                    title: Text(
+                        'Taxa: ${alocs.items[index].taxaDesocupacao.toStringAsFixed(10)}'),
+                    subtitle: Text('ID: ${alocs.items[index].id}'),
                     trailing: IconButton(
                       onPressed: () {
                         alocs.deleteAlocacao(alocs.items[index].id);

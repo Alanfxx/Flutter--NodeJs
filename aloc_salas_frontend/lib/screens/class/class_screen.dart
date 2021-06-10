@@ -50,10 +50,6 @@ class _ClassScreenState extends State<ClassScreen> {
                     itemBuilder: (context, index) {
                       return Container(
                         margin: EdgeInsets.symmetric(horizontal: 20),
-                        // decoration: BoxDecoration(
-                        // borderRadius: BorderRadius.all(Radius.circular(3)),
-                        // border: Border.all(width: 1),
-                        // ),
                         child: Card(
                           child: ListTile(
                             contentPadding:
@@ -63,6 +59,11 @@ class _ClassScreenState extends State<ClassScreen> {
                                 'Disciplina: ${classes.items[index].disciplina}'),
                             subtitle: Text(
                                 'Horários: ${classes.items[index].dias_horario}'),
+                            trailing: IconButton(
+                              onPressed: () =>
+                                  classes.deleteClass(classes.items[index].id),
+                              icon: Icon(Icons.delete_forever),
+                            ),
                           ),
                         ),
                       );

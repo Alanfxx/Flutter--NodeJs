@@ -20,6 +20,10 @@ class Classes with ChangeNotifier {
 
   int get countItems => _items.length;
 
+  Class getById(String id) {
+    return _items.singleWhere((el) => el.id == id);
+  }
+
   lerCSV({@required int cenario}) async {
     var d = new FirstOccurrenceSettingsDetector(
         eols: ['\r\n', '\n'], textDelimiters: ['"', "'"]);

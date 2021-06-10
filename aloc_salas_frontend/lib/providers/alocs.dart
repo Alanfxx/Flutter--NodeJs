@@ -52,10 +52,9 @@ class Alocs with ChangeNotifier {
   Future<void> loadAlocacoes() async {
     final response = await http.get("$_baseUrl");
     List<dynamic> data = json.decode(response.body);
-    print('id: ${data[0]['id']}');
     _items.clear();
     if (data != null) {
-      data.forEach((alocData) async {
+      await data.forEach((alocData) async {
         Alocacao aloc = new Alocacao(
           id: alocData['id'],
           taxaDesocupacao: alocData['taxaDesocupacao'],
@@ -126,7 +125,7 @@ class Alocs with ChangeNotifier {
     );
     Map<String, dynamic> data = json.decode(response.body);
     data.forEach((key, value) {
-      list.add(Disponivel(horario: key, sala: value));
+      list.add(Disponivel(horario: value[0], sala: value[1]));
     });
     return Future.value(list);
   }
@@ -134,11 +133,11 @@ class Alocs with ChangeNotifier {
   Future<void> run() async {
     final response = await http.get(
       '${Constants.BASE_API_URL}/run',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      // headers: <String, String>{
+      //   'Content-Type': 'application/json; charset=UTF-8',
+      // },
     );
-    print('Alocacao gerada: ${response.body}');
+    print('Alocacao status: ${response.statusCode}');
     await loadAlocacoes();
     // return Future.value();
   }

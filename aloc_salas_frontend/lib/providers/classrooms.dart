@@ -41,6 +41,8 @@ class Classrooms with ChangeNotifier {
             qualidade: el[3]));
       }
     });
+    await deleteAll([..._items]);
+    _items.clear();
     await addAll(classrooms);
   }
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class HorarioSala {
   final String horario;
-  String sala;
+  String sala; //<<<<<<<<<<<<<<<<<
 
   HorarioSala({
     @required this.horario,
