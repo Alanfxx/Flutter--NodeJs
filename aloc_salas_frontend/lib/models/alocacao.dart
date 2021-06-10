@@ -1,8 +1,9 @@
+import 'package:aloc_salas_frontend/models/disponivel.dart';
 import 'package:flutter/material.dart';
 
 class HorarioSala {
   final String horario;
-  final String sala;
+  String sala;
 
   HorarioSala({
     @required this.horario,
@@ -23,10 +24,12 @@ class Alocacao {
   final String id;
   final double taxaDesocupacao;
   final List<ItemAlocacao> alocacao;
+  Map<String, List<Disponivel>> salasDisponiveis;
 
   Alocacao({
-    this.id,
-    this.taxaDesocupacao,
+    @required this.id,
+    @required this.taxaDesocupacao,
     @required this.alocacao,
+    this.salasDisponiveis,
   });
 }

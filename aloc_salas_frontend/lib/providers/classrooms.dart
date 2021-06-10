@@ -20,6 +20,10 @@ class Classrooms with ChangeNotifier {
 
   int get countItems => _items.length;
 
+  Classroom getById(String id) {
+    return _items.singleWhere((el) => el.id == id);
+  }
+
   lerCSV({@required int cenario}) async {
     var d = new FirstOccurrenceSettingsDetector(
         eols: ['\r\n', '\n'], textDelimiters: ['"', "'"]);
@@ -72,7 +76,7 @@ class Classrooms with ChangeNotifier {
         'qualidade': newClassroom.qualidade
       }),
     );
-    print(response.body);
+    // print(response.body);
     _items.add(Classroom(
         id: response.body,
         id_sala: newClassroom.id_sala,

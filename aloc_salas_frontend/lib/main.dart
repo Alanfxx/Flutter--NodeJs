@@ -1,10 +1,12 @@
 import 'package:aloc_salas_frontend/providers/alocs.dart';
 import 'package:aloc_salas_frontend/providers/classes.dart';
 import 'package:aloc_salas_frontend/providers/classrooms.dart';
-import 'package:aloc_salas_frontend/screens/aloc_screen.dart';
-import 'package:aloc_salas_frontend/screens/class_screen.dart';
-import 'package:aloc_salas_frontend/screens/classroom_screen.dart';
+import 'package:aloc_salas_frontend/screens/aloc/aloc_detail_screen.dart';
+import 'package:aloc_salas_frontend/screens/aloc/aloc_screen.dart';
+import 'package:aloc_salas_frontend/screens/class/class_screen.dart';
+import 'package:aloc_salas_frontend/screens/classroom/classroom_screen.dart';
 import 'package:aloc_salas_frontend/screens/home_screen.dart';
+import 'package:aloc_salas_frontend/screens/aloc/horarios_screen.dart';
 import 'package:aloc_salas_frontend/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +40,8 @@ class MyApp extends StatelessWidget {
           AppRoutes.CLASS_SCREEN: (ctx) => ClassScreen(),
           AppRoutes.CLASSROOM_SCREEN: (ctx) => ClassroomScreen(),
           AppRoutes.ALOC_SCREEN: (ctx) => AlocScreen(),
+          AppRoutes.ALOC_DETAIL_SCREEN: (ctx) => AlocDetailScreen(),
+          AppRoutes.HORARIOS_SCREEN: (ctx) => HorariosScreen(),
         },
       ),
     );
